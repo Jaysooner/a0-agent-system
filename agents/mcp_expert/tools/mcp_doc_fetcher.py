@@ -1,0 +1,1 @@
+# mcp_doc_fetcher.py tool implementation

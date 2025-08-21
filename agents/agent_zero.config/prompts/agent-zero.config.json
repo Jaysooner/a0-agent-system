@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "agentmail": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "agentmail-mcp"
+      ]
+    }
+  },
+  "project": "Agent Zero - AgentMail Starter",
+  "agents": [
+    {
+      "name": "Orchestrator",
+      "role": "Coordinates sub-agents and tools; owns task routing & approvals.",
+      "goal": "Plan, delegate, and verify email automations using AgentMail MCP and other tools.",
+      "instructions": "See prompts/agentmail_orchestrator.md",
+      "tools": [
+        "agentmail"
+      ]
+    },
+    {
+      "name": "AgentMail Worker",
+      "role": "Executes email-related tasks (login, fetch, filter, draft, send, sign up) via AgentMail MCP.",
+      "goal": "Perform concrete, auditable actions with clear logs and safe handling of credentials.",
+      "instructions": "See prompts/agentmail_worker.md",
+      "tools": [
+        "agentmail"
+      ]
+    }
+  ],
+  "env": ".env"
+}

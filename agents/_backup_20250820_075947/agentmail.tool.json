@@ -1,0 +1,47 @@
+{
+  "name": "agentmail",
+  "summary": "Email automation MCP: login/signup, fetch/search, draft, send, and monitor mailboxes.",
+  "capabilities": [
+    "provider login / session management",
+    "inbox listing, search, read threads",
+    "compose, draft, send, schedule",
+    "attachment handling (base64 or path)",
+    "signup & verification flows (OTP / links)",
+    "webhook-style poll/notify for new mail"
+  ],
+  "inputs": {
+    "login": {
+      "provider": "string",
+      "username": "string",
+      "password": "string",
+      "otp": "optional string"
+    },
+    "fetch": {
+      "query": "string (e.g. from:, subject:, newer_than:, label:)",
+      "limit": "int"
+    },
+    "send": {
+      "to": "string|array",
+      "subject": "string",
+      "text": "string",
+      "html": "optional string",
+      "attachments": "optional array"
+    },
+    "signup": {
+      "service": "string",
+      "email": "string",
+      "password": "string",
+      "extra": "object"
+    },
+    "wait_for_email": {
+      "query": "string",
+      "timeout_sec": "int (default 120)"
+    }
+  },
+  "env_required": [
+    "AGENTMAIL_API_KEY",
+    "AGENTMAIL_DEFAULT_PROVIDER",
+    "AGENTMAIL_SENDER",
+    "AGENTMAIL_SAFE_MODE"
+  ]
+}

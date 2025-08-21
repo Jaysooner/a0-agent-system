@@ -1,0 +1,47 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "web-search": {
+      "command": "node",
+      "args": [
+        "./tools/web-search-mcp/server.js"
+      ]
+    },
+    "agentmail": {
+      "command": "node",
+      "args": [
+        "./tools/agentmail-mcp/server.js"
+      ]
+    },
+    "playwright": {
+      "command": "node",
+      "args": [
+        "./tools/playwright-mcp/server.js"
+      ]
+    },
+    "http-checker": {
+      "command": "node",
+      "args": [
+        "./tools/http-checker-mcp/server.js"
+      ]
+    },
+    "report-gen": {
+      "command": "node",
+      "args": [
+        "./tools/report-gen-mcp/server.js"
+      ]
+    },
+    "intel-feeds": {
+      "command": "node",
+      "args": [
+        "./tools/intel-feeds-mcp/server.js"
+      ]
+    }
+  }
+}

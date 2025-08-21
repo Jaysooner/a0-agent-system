@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@agentzero/playwright-mcp"
+      ]
+    },
+    "agentmail": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@agentzero/agentmail-mcp"
+      ]
+    }
+  }
+}

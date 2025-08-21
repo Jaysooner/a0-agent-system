@@ -1,0 +1,22 @@
+{
+  "^(SoftwareEngineer)\\.json$": {
+    "agent": "software_engineer",
+    "kind": "prompts"
+  },
+  "^(PromptRefiner)\\.json$": {
+    "agent": "prompt_refiner",
+    "kind": "prompts"
+  },
+  "^(Orchestrator)\\.json$": {
+    "agent": "orchestrator",
+    "kind": "prompts"
+  },
+  "^agentmail.*\\.md$": {
+    "agent": "agentmail",
+    "kind": "prompts"
+  },
+  "^agentmail\\.tool\\.json$": {
+    "agent": "agentmail",
+    "kind": "tools"
+  }
+}
