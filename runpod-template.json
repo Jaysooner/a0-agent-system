@@ -1,0 +1,34 @@
+{
+  "name": "A0 Enhanced Agent System",
+  "description": "Multi-agent orchestration platform with Venice.ai, AgentMail, and Claude Code",
+  "readme": "# A0 Enhanced - RunPod Template\n\nDeploy the complete A0 agent system with one click.\n\n## Features\n- 25+ specialized AI agents\n- Venice.ai integration\n- AgentMail SDK\n- PostgreSQL memory system\n- Claude Code pre-installed\n\n## Required Environment Variables\n- ANTHROPIC_API_KEY\n- OPENAI_API_KEY  \n- VENICE_API_KEY\n- AGENTMAIL_API_KEY",
+  "dockerArgs": "",
+  "containerDiskInGb": 20,
+  "volumeInGb": 0,
+  "volumeMountPath": "",
+  "ports": "8080/http",
+  "env": [
+    {
+      "key": "ANTHROPIC_API_KEY",
+      "value": "",
+      "description": "Your Anthropic API key for Claude access"
+    },
+    {
+      "key": "OPENAI_API_KEY", 
+      "value": "",
+      "description": "Your OpenAI API key"
+    },
+    {
+      "key": "VENICE_API_KEY",
+      "value": "",
+      "description": "Your Venice.ai API key"
+    },
+    {
+      "key": "AGENTMAIL_API_KEY",
+      "value": "",
+      "description": "Your AgentMail API key for email automation"
+    }
+  ],
+  "image": "ghcr.io/jaysooner/a0-agent-system:latest",
+  "startScript": "#!/bin/bash\ncd /exe\n./load_api_keys.sh\npython main.py"
+}
