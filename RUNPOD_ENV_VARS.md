@@ -1,5 +1,7 @@
 # SUPER_AGENT_0 - Environment Variables for RunPod
 
+**Image:** `paintcowboy/super-agent-0:latest`
+
 ## 🔑 Required API Keys
 
 Copy and paste these into your RunPod environment variables:
