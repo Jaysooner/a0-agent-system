@@ -66,47 +66,51 @@ RUN echo 'console.log("AgentMail MCP Server starting...");' > /git/agent-zero/to
     echo 'console.log("Report Gen MCP Server starting...");' > /git/agent-zero/tools/report-gen-mcp/server.js && \
     echo 'console.log("Intel Feeds MCP Server starting...");' > /git/agent-zero/tools/intel-feeds-mcp/server.js
 
+# Create workspace directory first
+RUN mkdir -p /workspace
+
 # Set up API key loading script
-RUN echo '#!/bin/bash' > /exe/load_api_keys.sh && \
-    echo 'echo "Loading API keys from environment variables..."' >> /exe/load_api_keys.sh && \
-    echo 'if [ ! -f /git/agent-zero/.env ]; then' >> /exe/load_api_keys.sh && \
-    echo '    touch /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
-    echo 'fi' >> /exe/load_api_keys.sh && \
-    echo 'for var in $(env | grep -E "^[A-Z_]+_API_KEY="); do' >> /exe/load_api_keys.sh && \
-    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
-    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
-    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
-    echo 'done' >> /exe/load_api_keys.sh && \
-    echo 'for var in $(env | grep -E "^AGENTMAIL_"); do' >> /exe/load_api_keys.sh && \
-    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
-    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
-    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
-    echo 'done' >> /exe/load_api_keys.sh && \
-    echo 'for var in $(env | grep -E "^ANTHROPIC_"); do' >> /exe/load_api_keys.sh && \
-    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
-    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
-    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
-    echo 'done' >> /exe/load_api_keys.sh && \
-    echo 'for var in $(env | grep -E "^VENICE_"); do' >> /exe/load_api_keys.sh && \
-    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
-    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
-    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
-    echo 'done' >> /exe/load_api_keys.sh && \
-    echo 'for var in $(env | grep -E "^POSTGRES_"); do' >> /exe/load_api_keys.sh && \
-    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
-    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
-    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
-    echo 'done' >> /exe/load_api_keys.sh && \
-    echo 'echo "API keys loaded successfully"' >> /exe/load_api_keys.sh && \
-    chmod +x /exe/load_api_keys.sh
+RUN echo '#!/bin/bash' > /workspace/load_api_keys.sh && \
+    echo 'echo "Loading API keys from environment variables..."' >> /workspace/load_api_keys.sh && \
+    echo 'mkdir -p /workspace' >> /workspace/load_api_keys.sh && \
+    echo 'if [ ! -f /git/agent-zero/.env ]; then' >> /workspace/load_api_keys.sh && \
+    echo '    touch /git/agent-zero/.env' >> /workspace/load_api_keys.sh && \
+    echo 'fi' >> /workspace/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^[A-Z_]+_API_KEY="); do' >> /workspace/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /workspace/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /workspace/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /workspace/load_api_keys.sh && \
+    echo 'done' >> /workspace/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^AGENTMAIL_"); do' >> /workspace/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /workspace/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /workspace/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /workspace/load_api_keys.sh && \
+    echo 'done' >> /workspace/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^ANTHROPIC_"); do' >> /workspace/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /workspace/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /workspace/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /workspace/load_api_keys.sh && \
+    echo 'done' >> /workspace/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^VENICE_"); do' >> /workspace/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /workspace/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /workspace/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /workspace/load_api_keys.sh && \
+    echo 'done' >> /workspace/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^POSTGRES_"); do' >> /workspace/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /workspace/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /workspace/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /workspace/load_api_keys.sh && \
+    echo 'done' >> /workspace/load_api_keys.sh && \
+    echo 'echo "API keys loaded successfully"' >> /workspace/load_api_keys.sh && \
+    chmod +x /workspace/load_api_keys.sh
 
 # Install a0-bundle components
-RUN echo '#!/bin/bash' > /exe/install_bundle.sh && \
-    echo 'cd /git/agent-zero' >> /exe/install_bundle.sh && \
-    echo 'if [ -f "./scripts/install_a0_bundle.sh" ]; then' >> /exe/install_bundle.sh && \
-    echo '    bash ./scripts/install_a0_bundle.sh' >> /exe/install_bundle.sh && \
-    echo 'fi' >> /exe/install_bundle.sh && \
-    chmod +x /exe/install_bundle.sh
+RUN echo '#!/bin/bash' > /workspace/install_bundle.sh && \
+    echo 'cd /git/agent-zero' >> /workspace/install_bundle.sh && \
+    echo 'if [ -f "./scripts/install_a0_bundle.sh" ]; then' >> /workspace/install_bundle.sh && \
+    echo '    bash ./scripts/install_a0_bundle.sh' >> /workspace/install_bundle.sh && \
+    echo 'fi' >> /workspace/install_bundle.sh && \
+    chmod +x /workspace/install_bundle.sh
 
 # cleanup repo and install A0 without caching, this speeds up builds
 ARG CACHE_DATE=none
@@ -120,5 +124,8 @@ EXPOSE 22 80 9000-9009
 
 RUN chmod +x /exe/initialize.sh /exe/run_A0.sh /exe/run_searxng.sh /exe/run_tunnel_api.sh
 
+# Set working directory to /workspace
+WORKDIR /workspace
+
 # Load API keys, install bundle, and initialize runtime
-CMD ["/bin/bash", "-c", "/exe/load_api_keys.sh && /exe/install_bundle.sh && /exe/initialize.sh $BRANCH"]
+CMD ["/bin/bash", "-c", "/workspace/load_api_keys.sh && /workspace/install_bundle.sh && /exe/initialize.sh $BRANCH"]
