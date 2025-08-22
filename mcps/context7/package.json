@@ -1,0 +1,14 @@
+{
+  "name": "context7-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "bin": {
+    "context7-mcp": "index.js"
+  },
+  "dependencies": {
+    "@upstash/context7-mcp": "^0.3.0"
+  },
+  "scripts": {
+    "start": "npx -y @upstash/context7-mcp"
+  }
+}

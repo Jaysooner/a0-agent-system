@@ -29,9 +29,16 @@ RUN pip install --no-cache-dir \
     httpx \
     aiofiles \
     python-multipart \
+    psycopg2-binary \
+    pgvector \
+    typer \
+    rich \
+    click \
+    imapclient \
+    mailparser \
     && pip cache purge
 
-# Install Node.js tools for MCP servers
+# Install Node.js tools for MCP servers and dependencies
 RUN npm install -g \
     @upstash/context7-mcp \
     agentmail-mcp \
@@ -39,7 +46,8 @@ RUN npm install -g \
     web-search-mcp \
     http-checker-mcp \
     report-gen-mcp \
-    intel-feeds-mcp
+    intel-feeds-mcp \
+    undici
 
 # Create tools directory and copy MCP server files
 RUN mkdir -p /git/agent-zero/tools && \
@@ -79,8 +87,26 @@ RUN echo '#!/bin/bash' > /exe/load_api_keys.sh && \
     echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
     echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
     echo 'done' >> /exe/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^VENICE_"); do' >> /exe/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
+    echo 'done' >> /exe/load_api_keys.sh && \
+    echo 'for var in $(env | grep -E "^POSTGRES_"); do' >> /exe/load_api_keys.sh && \
+    echo '    key=$(echo "$var" | cut -d= -f1)' >> /exe/load_api_keys.sh && \
+    echo '    value=$(echo "$var" | cut -d= -f2-)' >> /exe/load_api_keys.sh && \
+    echo '    echo "$key=$value" >> /git/agent-zero/.env' >> /exe/load_api_keys.sh && \
+    echo 'done' >> /exe/load_api_keys.sh && \
     echo 'echo "API keys loaded successfully"' >> /exe/load_api_keys.sh && \
     chmod +x /exe/load_api_keys.sh
+
+# Install a0-bundle components
+RUN echo '#!/bin/bash' > /exe/install_bundle.sh && \
+    echo 'cd /git/agent-zero' >> /exe/install_bundle.sh && \
+    echo 'if [ -f "./scripts/install_a0_bundle.sh" ]; then' >> /exe/install_bundle.sh && \
+    echo '    bash ./scripts/install_a0_bundle.sh' >> /exe/install_bundle.sh && \
+    echo 'fi' >> /exe/install_bundle.sh && \
+    chmod +x /exe/install_bundle.sh
 
 # cleanup repo and install A0 without caching, this speeds up builds
 ARG CACHE_DATE=none
@@ -94,5 +120,5 @@ EXPOSE 22 80 9000-9009
 
 RUN chmod +x /exe/initialize.sh /exe/run_A0.sh /exe/run_searxng.sh /exe/run_tunnel_api.sh
 
-# Load API keys and initialize runtime
-CMD ["/bin/bash", "-c", "/exe/load_api_keys.sh && /exe/initialize.sh $BRANCH"]
+# Load API keys, install bundle, and initialize runtime
+CMD ["/bin/bash", "-c", "/exe/load_api_keys.sh && /exe/install_bundle.sh && /exe/initialize.sh $BRANCH"]

@@ -1,0 +1,51 @@
+{
+  "agents": {
+    "orchestrator": {
+      "enabled": true,
+      "path": "/root/a0/agents/orchestrator"
+    },
+    "prompt_refiner": {
+      "enabled": true,
+      "path": "/root/a0/agents/prompt_refiner"
+    },
+    "mcp_expert": {
+      "enabled": true,
+      "path": "/root/a0/agents/mcp_expert"
+    },
+    "bug_bounty_team": {
+      "enabled": true,
+      "path": "/root/a0/agents/bug_bounty_team"
+    }
+  },
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "agentmail": {
+      "command": "agentmail-mcp",
+      "args": []
+    },
+    "runpodctl": {
+      "command": "/root/a0/mcps/runpodctl/server.sh",
+      "args": []
+    },
+    "venice": {
+      "command": "node",
+      "args": [
+        "/root/a0/mcps/venice/server.js"
+      ]
+    }
+  },
+  "memory": {
+    "knowledge_paths": [
+      "/root/a0/docs/runpod-sdk.md",
+      "/root/a0/docs/runpod-cli-reference.md",
+      "/root/a0/docs/Venice.ai-API-Postman-Documentation.htm",
+      "/root/a0/docs/Using-Postman-veniceai.mhtml"
+    ]
+  }
+}

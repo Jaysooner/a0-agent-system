@@ -1,0 +1,7 @@
+[project]
+name = "agentmail-mcp"
+version = "0.1.0"
+dependencies = ["fastapi", "uvicorn", "imapclient", "mailparser", "typer"]
+
+[project.scripts]
+agentmail-mcp = "agentmail_mcp.server:main"

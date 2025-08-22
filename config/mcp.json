@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "agentmail": {
+      "command": "agentmail-mcp",
+      "args": []
+    },
+    "runpodctl": {
+      "command": "/root/a0/mcps/runpodctl/server.sh",
+      "args": []
+    },
+    "venice": {
+      "command": "node",
+      "args": [
+        "/root/a0/mcps/venice/server.js"
+      ]
+    }
+  }
+}

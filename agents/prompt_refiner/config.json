@@ -1,0 +1,8 @@
+{
+  "name": "prompt_refiner",
+  "role": "Refines prompts and specs",
+  "tools": [
+    "mcp:context7"
+  ],
+  "memory_namespace": "prompt-refiner"
+}

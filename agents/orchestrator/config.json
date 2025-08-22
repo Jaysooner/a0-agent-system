@@ -1,0 +1,11 @@
+{
+  "name": "orchestrator",
+  "role": "Orchestrates multi-agent workflows",
+  "tools": [
+    "mcp:context7",
+    "mcp:venice",
+    "mcp:agentmail",
+    "mcp:runpodctl"
+  ],
+  "memory_namespace": "orchestrator"
+}

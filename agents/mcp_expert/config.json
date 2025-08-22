@@ -1,0 +1,11 @@
+{
+  "name": "mcp_expert",
+  "role": "MCP integration specialist",
+  "tools": [
+    "mcp:context7",
+    "mcp:runpodctl",
+    "mcp:venice",
+    "mcp:agentmail"
+  ],
+  "memory_namespace": "mcp-expert"
+}

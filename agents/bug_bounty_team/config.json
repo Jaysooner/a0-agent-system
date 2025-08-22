@@ -1,0 +1,8 @@
+{
+  "name": "bug_bounty_team",
+  "role": "Bug bounty research and triage",
+  "tools": [
+    "mcp:context7"
+  ],
+  "memory_namespace": "bug-bounty-collective"
+}

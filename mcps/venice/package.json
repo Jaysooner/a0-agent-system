@@ -1,0 +1,14 @@
+{
+  "name": "venice-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "venice-mcp": "server.js"
+  },
+  "dependencies": {
+    "undici": "^6.19.8"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
