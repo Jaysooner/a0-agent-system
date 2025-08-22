@@ -20,7 +20,7 @@ RUN bash /ins/install_A0.sh $BRANCH
 RUN bash /ins/install_additional.sh $BRANCH
 
 # Install additional Python packages and dependencies
-RUN pip install --no-cache-dir \
+RUN python3 -m pip install --no-cache-dir \
     anthropic \
     claude-code \
     agentmail \
@@ -36,7 +36,7 @@ RUN pip install --no-cache-dir \
     click \
     imapclient \
     mailparser \
-    && pip cache purge
+    && python3 -m pip cache purge
 
 # Install Node.js tools for MCP servers and dependencies
 RUN npm install -g \

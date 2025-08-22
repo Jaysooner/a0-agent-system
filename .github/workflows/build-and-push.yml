@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: jaysooner/super-agent-0
+  IMAGE_NAME: paintcowboy/super-agent-0
 
 jobs:
   build-and-push:

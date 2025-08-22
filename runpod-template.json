@@ -29,6 +29,6 @@
       "description": "Your AgentMail API key for email automation"
     }
   ],
-  "image": "jaysooner/super-agent-0:latest",
+  "image": "paintcowboy/super-agent-0:latest",
   "startScript": "#!/bin/bash\ncd /workspace\n./load_api_keys.sh\n./install_bundle.sh\n/exe/initialize.sh"
 }
