@@ -12,6 +12,9 @@ docker build -f DockerfileLocal -t agent-zero:local .
 
 # Or build the production image
 docker build -f docker/run/Dockerfile -t agent-zero:latest .
+
+# Build with Venice API key (optional)
+docker build --build-arg VENICE_API_KEY=your_venice_key -f DockerfileLocal -t agent-zero:local .
 ```
 
 ### 2. Deploy on RunPod
@@ -32,6 +35,9 @@ AGENTMAIL_API_KEY=your_agentmail_api_key_here
 AGENTMAIL_DEFAULT_PROVIDER=gmail
 AGENTMAIL_SENDER=your_email@example.com
 AGENTMAIL_SAFE_MODE=true
+
+# Venice API Key (optional - for Venice AI models)
+VENICE_API_KEY=your_venice_api_key_here
 
 # Optional: Other API Keys
 OPENAI_API_KEY=your_openai_api_key_here
@@ -58,6 +64,8 @@ AUTH_PASSWORD=your_password_here
 Expose these ports in RunPod:
 - **Port 80**: Web UI
 - **Port 22**: SSH access
+- **Port 8000**: FastAPI health checks and Swagger UI
+- **Port 8888**: Jupyter Lab
 - **Ports 9000-9009**: Additional services
 
 #### Container Settings
@@ -78,15 +86,19 @@ Expose these ports in RunPod:
 - **httpx**: HTTP client
 - **aiofiles**: Async file operations
 - **python-multipart**: File upload support
+- **runpod**: RunPod Python SDK
+- **jupyterlab**: Jupyter Lab for interactive development
 
 ### Node.js MCP Servers
 - **@upstash/context7-mcp**: Context management
 - **agentmail-mcp**: Email automation MCP server
-- **playwright-mcp**: Browser automation
-- **web-search-mcp**: Web search capabilities
-- **http-checker-mcp**: HTTP endpoint checking
-- **report-gen-mcp**: Report generation
-- **intel-feeds-mcp**: Intelligence feeds
+
+### RunPod Integration
+- **RunPod CLI (runpodctl)**: Command-line interface for RunPod
+- **FastAPI Health Checks**: Health monitoring at `/health`
+- **Swagger UI**: API documentation at `/docs`
+- **Jupyter Lab**: Interactive development environment
+- **Venice API Integration**: Support for Venice AI models
 
 ### Pre-configured Agents
 - **Orchestrator**: Coordinates sub-agents and tools
@@ -99,7 +111,7 @@ Expose these ports in RunPod:
 
 The Docker image automatically loads API keys from environment variables into the `.env` file on startup. The script looks for:
 
-1. **Any variable ending with `_API_KEY`** (e.g., `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`)
+1. **Any variable ending with `_API_KEY`** (e.g., `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `VENICE_API_KEY`)
 2. **AgentMail variables** (e.g., `AGENTMAIL_API_KEY`, `AGENTMAIL_DEFAULT_PROVIDER`)
 3. **Anthropic variables** (e.g., `ANTHROPIC_API_KEY`)
 
@@ -110,6 +122,7 @@ The Docker image automatically loads API keys from environment variables into th
 ANTHROPIC_API_KEY=sk-ant-api03-...
 OPENAI_API_KEY=sk-...
 GOOGLE_API_KEY=AIza...
+VENICE_API_KEY=your_venice_key_here
 
 # AgentMail Configuration
 AGENTMAIL_API_KEY=your_agentmail_key
@@ -145,15 +158,26 @@ MISTRAL_API_KEY=your_mistral_key
 # - Context-aware coding
 ```
 
-### 3. MCP Server Integration
+### 3. RunPod Integration
 
-The image includes pre-configured MCP servers for:
-- **Context Management**: Semantic search and memory
-- **Web Search**: Real-time information retrieval
-- **Browser Automation**: Web scraping and interaction
-- **HTTP Checking**: Endpoint monitoring
-- **Report Generation**: Automated reporting
-- **Intelligence Feeds**: Security and threat intelligence
+The image includes RunPod-specific features:
+- **Health Checks**: Visit `http://your-pod:8000/health` for status
+- **API Documentation**: Visit `http://your-pod:8000/docs` for Swagger UI
+- **Venice Integration**: Check Venice API key status at `http://your-pod:8000/venice`
+- **Jupyter Lab**: Access at `http://your-pod:8888` for interactive development
+- **RunPod CLI**: Use `runpodctl` for RunPod management
+
+### 4. Alternative Startup Modes
+
+You can start the container with different modes:
+
+```bash
+# Standard Agent Zero mode (default)
+docker run ... agent-zero:latest
+
+# RunPod extras mode (FastAPI + Jupyter)
+docker run ... agent-zero:latest /usr/local/bin/start-a0-extras
+```
 
 ## 🔍 Troubleshooting
 
@@ -164,15 +188,15 @@ The image includes pre-configured MCP servers for:
    - Verify the variable names match the expected format
    - Check container logs for API key loading messages
 
-2. **MCP Servers Not Starting**
-   - Ensure Node.js packages are installed
-   - Check that tool directories exist
-   - Verify server.js files are present
-
-3. **Port Access Issues**
+2. **Port Access Issues**
    - Confirm ports are exposed in RunPod configuration
    - Check firewall settings
    - Verify the container is running on the correct ports
+
+3. **RunPod Integration Issues**
+   - Ensure RunPod SDK is installed: `pip install runpod`
+   - Check RunPod CLI installation: `runpodctl --version`
+   - Verify FastAPI health endpoint: `curl http://localhost:8000/health`
 
 ### Logs and Debugging
 
@@ -186,8 +210,14 @@ docker exec -it <container_id> /bin/bash
 # Check API key loading
 cat /git/agent-zero/.env
 
-# Verify MCP server status
-ps aux | grep node
+# Test health endpoint
+curl http://localhost:8000/health
+
+# Check Venice API key
+curl http://localhost:8000/venice
+
+# Access Jupyter Lab
+# Open browser to http://your-pod:8888
 ```
 
 ## 🔐 Security Considerations
@@ -214,6 +244,7 @@ ps aux | grep node
 - [RunPod Documentation](https://docs.runpod.io/)
 - [AgentMail Documentation](https://agentmail.ai/)
 - [Anthropic Claude Documentation](https://docs.anthropic.com/)
+- [Venice AI Documentation](https://venice.ai/)
 
 ## 🤝 Support
 
@@ -225,4 +256,4 @@ For issues with this Docker image:
 
 ---
 
-**Note**: This Docker image is optimized for RunPod deployment and includes all necessary dependencies for Agent Zero with AgentMail and Claude Code integration.
+**Note**: This Docker image is optimized for RunPod deployment and includes all necessary dependencies for Agent Zero with AgentMail, Claude Code, and RunPod integration.

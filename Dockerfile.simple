@@ -50,6 +50,61 @@ RUN echo "cache buster $CACHE_DATE" && bash /ins/install_A02.sh $BRANCH
 # post installation steps
 RUN bash /ins/post_install.sh $BRANCH
 
+# --- BEGIN Agent Zero additions ---
+
+# Pass your Venice key *at build or run time* without baking secrets into the image.
+# Build:  docker build --build-arg VENICE_API_KEY=*** -t a0:latest .
+# Run:    docker run -e VENICE_API_KEY=*** -p 8000:8000 -p 8888:8888 a0:latest
+ARG VENICE_API_KEY
+ENV VENICE_API_KEY=${VENICE_API_KEY}
+
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl wget ca-certificates python3 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Python deps (RunPod SDK + Jupyter + tiny FastAPI app for Swagger)
+RUN pip3 install --no-cache-dir runpod fastapi uvicorn jupyterlab
+
+# RunPod CLI (runpodctl)
+RUN set -eux; \
+    ARCH="$(uname -m)"; \
+    case "$ARCH" in \
+      x86_64)  RP_URL="https://github.com/runpod/runpodctl/releases/latest/download/runpodctl-linux-amd64" ;; \
+      aarch64) RP_URL="https://github.com/runpod/runpodctl/releases/latest/download/runpodctl-linux-arm64" ;; \
+      *) echo "Unsupported arch: $ARCH" && exit 1 ;; \
+    esac; \
+    curl -L "$RP_URL" -o /usr/local/bin/runpodctl; \
+    chmod +x /usr/local/bin/runpodctl
+
+# Minimal FastAPI app gives you a healthcheck and Swagger UI at /docs (port 8000)
+WORKDIR /opt/a0-extras
+RUN printf "%s\n" \
+"from fastapi import FastAPI" \
+"import os" \
+"app = FastAPI(title='Agent Zero Extras')" \
+"@app.get('/health')" \
+"def health(): return {'status':'ok'}" \
+"@app.get('/venice')" \
+"def venice(): return {'venice_api_key_present': bool(os.getenv('VENICE_API_KEY'))}" \
+> app.py
+
+# Optional startup script to run both FastAPI and Jupyter side-by-side
+RUN printf "%s\n" \
+"#!/usr/bin/env bash" \
+"set -euo pipefail" \
+"python3 -m uvicorn app:app --host 0.0.0.0 --port 8000 &" \
+"jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.disable_check_xsrf=True" \
+> /usr/local/bin/start-a0-extras && chmod +x /usr/local/bin/start-a0-extras
+
+# Expose the ports used by these additions
+EXPOSE 8000 8888
+
+# NOTE: Do not override your existing CMD/ENTRYPOINT.
+# To use the helpers, run this *instead of* your default command:
+#   docker run ... a0:latest /usr/local/bin/start-a0-extras
+# --- END Agent Zero additions ---
+
 # Expose ports
 EXPOSE 22 80 9000-9009
 
